@@ -135,6 +135,12 @@ public:
         // Weight decay for Filter 1
         CUBLAS_CHECK(cublasSscal(cublasHandle, 32 * channels * 3 * 3, &decayFactor, (float*)d_filter1, 1));
         CUDNN_CHECK(cudnnConvolutionBackwardFilter(cudnnHandle, &lr_neg, inputDesc, d_input, conv1OutDesc, d_diffConv1, conv1Desc, algo1, d_workspace, workspaceSize, &alpha, filter1Desc, d_filter1));
+        
+        // Final Backprop to Input (Optional but completes the derivative chain)
+        size_t d_in_size = batchSize * channels * height * width * sizeof(float);
+        void* d_diffInput; CUDA_CHECK(cudaMalloc(&d_diffInput, d_in_size));
+        CUDNN_CHECK(cudnnConvolutionBackwardData(cudnnHandle, &alpha, filter1Desc, d_filter1, conv1OutDesc, d_diffConv1, conv1Desc, algo1, d_workspace, workspaceSize, &beta, inputDesc, d_diffInput));
+        cudaFree(d_diffInput);
     }
 
     void saveWeights(const string& fn) {

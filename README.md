@@ -1,52 +1,71 @@
 # CuVision-Engine
 
-### High-Performance Native Computer Vision for the Edge.
+High-Performance Native Computer Vision for the Edge.
 
-CuVision-Engine is a high-performance, low-latency Computer Vision framework written entirely in native C++/CUDA. Engineered for maximum throughput on NVIDIA hardware, it provides optimized implementations for Classification, Segmentation, and Object Detection by leveraging cuDNN and cuBLAS directly.
+CuVision-Engine is a low-latency Computer Vision framework developed in C++ and CUDA. By leveraging cuDNN and cuBLAS directly, it achieves maximum hardware utilization on NVIDIA GPUs, making it ideal for real-time applications where high frameworks like PyTorch or TensorFlow introduce unnecessary overhead.
 
-## Key Features
-- Native CUDA/cuDNN: Bypasses heavy deep learning frameworks for maximum hardware utilization.
-- Optimized for Edge: Designed for real-time inference on NVIDIA Jetson, mobile GPUs, and production workstations.
-- Deep CNN Architecture: Includes He Initialization, L2 Regularization, and SGD with Learning Rate Decay.
-- Modular Design: Clean separation between data pipelines, network architectures, and utilities.
+## Core Capabilities
+
+- **Native CUDA/cuDNN Optimization**: Direct manipulation of memory and descriptors for ultra-fast inference.
+- **Edge Deployment Ready**: Designed with a minimal footprint for systems like NVIDIA Jetson Nano/Xavier.
+- **Robust Training Pipeline**: Includes advanced features like He Initialization and weight decay for stable learning.
+- **Modular Architecture**: Logical separation between data processing, neural network logic, and hardware utilities.
+
+## Technical Specifications
+
+| Feature | Implementation | Benefit |
+| :--- | :--- | :--- |
+| **Architecture** | 3-Layer Deep CNN (2 Conv + 1 FC) | High feature extraction capacity with minimal FLOPs. |
+| **Initialization** | He (Kaiming) Normal | Prevents vanishing/exploding gradients in ReLU layers. |
+| **Regularization** | L2 Weight Decay (Lambda = 0.0005) | Reduces overfitting by penalizing large weights. |
+| **Optimization** | SGD with Learning Rate Decay | Smooth convergence and high final precision. |
+| **Hardware** | Synchronous CUDA Streams | Guaranteed deterministic behavior for safety-critical tasks. |
 
 ## Project Structure
-- classification/: Core CNN implementations, training loops, and benchmarking.
-  - network/: CUDA kernels and cuDNN descriptors.
-  - dataset/: High-performance binary data loaders and preprocessing scripts.
-- segmentation/: (Coming Soon) Pixel-wise classification prototypes.
-- detection/: (Coming Soon) Anchor-based object detection.
+
+- **classification/**: Deep CNN implementation for category recognition.
+  - **network/**: Native CUDA kernels, benchmarking timers, and cuDNN descriptors.
+  - **dataset/**: Preprocessing scripts and high-speed binary data loaders.
+- **segmentation/**: Future module for pixel-wise classification.
+- **detection/**: Future module for real-time object tracking.
 
 ## Getting Started
 
-### Prerequisites
-- NVIDIA GPU with CUDA Compute Capability 6.0+
-- CUDA Toolkit 11.0+
-- cuDNN 8.0+
-- C++ Compiler (MSVC on Windows, GCC on Linux)
+### Hardware Requirements
+- NVIDIA GPU (Pascal architecture or newer recommended).
+- CUDA Toolkit 11.0+.
+- cuDNN 8.x library.
 
-### Compilation
-Navigate to the module directory (e.g., classification) and run the build script:
-powershell
+### Build Instructions
+Navigate to a module directory and execute the platform-specific build script:
+
+```powershell
 cd classification
 .\compile.ps1
+```
 
+### Execution Pipeline
 
-### Training
-1. Prepare the dataset:
-bash
-python dataset/prepare_dataset.py
+1. **Prepare Data**:
+   Download and format the dataset into optimized binary blobs:
+   ```bash
+   python dataset/prepare_dataset.py
+   ```
 
-2. Run the classifier:
-powershell
-.\dnn_classifier.exe
+2. **Train & Infer**:
+   Execute the compiled binary to start the training process:
+   ```powershell
+   .\dnn_classifier.exe
+   ```
 
+## Development Roadmap
 
-## Roadmap
-- [x] Deep CNN Core: 3-layer architecture with He Initialization.
-- [ ] Data Augmentation: Real-time CUDA-accelerated flips, rotations, and color jittering.
-- [ ] TensorRT Integration: 10x-20x faster inference for edge deployment.
-- [ ] YOLO Implementation: Real-time object detection kernels.
+- [x] Deep CNN Core with He Initialization.
+- [x] L2 Regularization & Scheduled LR Decay.
+- [x] High-precision GPU Benchmark Timers.
+- [ ] Accelerated Data Augmentation (CUDA Kernels).
+- [ ] Object Detection (Anchor-based kernels).
+- [ ] TensorRT Integration for production deployment.
 
 ## License
-MIT License - See the [LICENSE](LICENSE) file for details.
+Distributed under the MIT License. See `LICENSE` for more information.

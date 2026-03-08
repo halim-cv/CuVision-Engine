@@ -1,5 +1,5 @@
-#include "cudnn_helper.h"
 #include <iostream>
+#include <cuda_runtime.h>
 
 using namespace std;
 
@@ -21,3 +21,29 @@ void printDeviceInformation() {
         cout << "  Total Global Memory: " << prop.totalGlobalMem / (1024 * 1024) << " MB" << endl;
     }
 }
+
+// Timer for benchmarking CUDA kernels
+class GpuTimer {
+    cudaEvent_t startEvent, stopEvent;
+public:
+    GpuTimer() {
+        cudaEventCreate(&startEvent);
+        cudaEventCreate(&stopEvent);
+    }
+    ~GpuTimer() {
+        cudaEventDestroy(startEvent);
+        cudaEventDestroy(stopEvent);
+    }
+    void start() {
+        cudaEventRecord(startEvent, 0);
+    }
+    void stop() {
+        cudaEventRecord(stopEvent, 0);
+        cudaEventSynchronize(stopEvent);
+    }
+    float elapsed_ms() {
+        float ms = 0;
+        cudaEventElapsedTime(&ms, startEvent, stopEvent);
+        return ms;
+    }
+};

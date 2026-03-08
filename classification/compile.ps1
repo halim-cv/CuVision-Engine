@@ -3,7 +3,7 @@
 
 Write-Host "Compiling Deep Neural Network..." -ForegroundColor Cyan
 
-nvcc main.cu -lcudnn -lcublas -o dnn_classifier.exe
+nvcc main.cu -O3 -use_fast_math -lineinfo -lcudnn -lcublas -o dnn_classifier.exe
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n[SUCCESS] Compilation completed!" -ForegroundColor Green

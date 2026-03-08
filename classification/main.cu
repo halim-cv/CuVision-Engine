@@ -48,6 +48,7 @@ int main() {
         float totalLoss = 0;
         int correct = 0;
 
+        GpuTimer epochTimer; epochTimer.start();
         for (int b = 0; b < numBatches; ++b) {
             loadBatch(file, h_batch.data(), h_labels.data(), batchSize);
 
@@ -76,15 +77,19 @@ int main() {
 
             // Backward Pass (Training)
             dnn.backward(h_labels.data(), learningRate);
+
+            if (b % 10 == 0) cout << "\rBatch " << b << "/" << numBatches << " processed..." << flush;
         }
+        epochTimer.stop();
 
         // Learning Rate Decay (reduce by 20% every epoch)
         learningRate *= 0.8f;
 
-        cout << "Epoch " << epoch + 1 << "/" << epochs
+        cout << "\rEpoch " << epoch + 1 << "/" << epochs
              << " - Loss: " << totalLoss / totalImages
              << " - Accuracy: " << (float)correct / totalImages * 100 << "%" 
-             << " - LR: " << learningRate << endl;
+             << " - LR: " << learningRate 
+             << " - Time: " << epochTimer.elapsed_ms() / 1000.0f << "s" << endl;
 
         file.close();
     }

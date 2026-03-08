@@ -71,6 +71,12 @@ def process_data(num_classes=10, images_per_class=80):
                     f.write(img_data.tobytes())
                 except Exception as e:
                     print(f"Skipping {img_path} due to error: {e}")
+                
+                # Progress indicator
+                processed = class_id * images_per_class + i + 1
+                if processed % 100 == 0 or processed == total_images:
+                    print(f"\rProgress: {processed}/{total_images} images processed...", end="", flush=True)
+        print()
 
     print(f"Successfully created {OUTPUT_FILE} with {total_images} images.")
 
