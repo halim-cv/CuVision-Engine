@@ -1,5 +1,6 @@
 #include "cudnn_helper.h"
 #include "utilities.cu"
+#include "augmentation.cu"
 #include <vector>
 #include <cuda_runtime.h>
 #include <cudnn.h>
@@ -60,11 +61,16 @@ public:
         // Assume context destruction handles cleanup for brevity
         cudnnDestroy(cudnnHandle);
         cublasDestroy(cublasHandle);
+        if (augmenter) delete augmenter;
     }
 
     void forward(float* h_input, bool isTraining = true) {
         size_t inputSize = batchSize * channels * height * width * sizeof(float);
         CUDA_CHECK(cudaMemcpy(d_input, h_input, inputSize, cudaMemcpyHostToDevice));
+
+        if (isTraining) {
+            augmenter->apply((float*)d_input, channels, height, width);
+        }
 
         float alpha = 1.0f, beta = 0.0f;
 
@@ -187,8 +193,11 @@ private:
     void *v_bn2Scale, *v_bn2Bias, *dw_bn2Scale, *dw_bn2Bias;
     void *d_dropStates, *d_dropReserve, *d_pool2OutDrop;
 
-    void *d_conv1Out, *d_bn1Out, *d_pool1Out, *d_conv2Out, *d_bn2Out, *d_pool2Out, *d_fcOut, *d_softmaxOut;
+    void *d_pool1Out, *d_pool2Out, *d_fcOut, *d_softmaxOut;
+    void *d_conv1Out, *d_bn1Out, *d_conv2Out, *d_bn2Out;
     void *d_diffLogits, *d_diffPool2Drop, *d_diffPool2, *d_diffBn2Out, *d_diffConv2Out, *d_diffPool1, *d_diffBn1Out, *d_diffConv1Out;
+
+    DataAugmenter* augmenter;
 
     void setupDescriptors() {
         CUDNN_CHECK(cudnnCreateTensorDescriptor(&inputDesc));
@@ -331,6 +340,9 @@ private:
         CUDA_CHECK(cudaMalloc(&d_diffPool1, batchSize * 32 * (h1/2) * (w1/2) * sizeof(float)));
         CUDA_CHECK(cudaMalloc(&d_diffBn1Out, batchSize * 32 * h1 * w1 * sizeof(float)));
         CUDA_CHECK(cudaMalloc(&d_diffConv1Out, batchSize * 32 * h1 * w1 * sizeof(float)));
+
+        // Setup Data Augmenter
+        augmenter = new DataAugmenter(batchSize);
     }
 
     void initHe(void* d_ptr, size_t size, int fanIn) {

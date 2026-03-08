@@ -67,7 +67,7 @@ cd classification
 - [x] Custom Momentum-Accelerated SGD Kernel.
 - [x] L2 Regularization & Scheduled LR Decay.
 - [x] High-precision GPU Benchmark Timers.
-- [ ] Accelerated Data Augmentation (CUDA Kernels).
+- [x] Accelerated Data Augmentation (CUDA Kernels).
 - [ ] Object Detection (Anchor-based kernels).
 - [ ] TensorRT Integration for production deployment.
 
