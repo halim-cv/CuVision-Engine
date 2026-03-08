@@ -2,23 +2,25 @@
 
 High-Performance Native Computer Vision for the Edge.
 
-CuVision-Engine is a low-latency Computer Vision framework developed in C++ and CUDA. By leveraging cuDNN and cuBLAS directly, it achieves maximum hardware utilization on NVIDIA GPUs, making it ideal for real-time applications where high frameworks like PyTorch or TensorFlow introduce unnecessary overhead.
+CuVision-Engine is a low-latency Computer Vision framework developed in C++ and CUDA. By leveraging cuDNN and cuBLAS directly, it achieves maximum hardware utilization on NVIDIA GPUs, making it ideal for real-time applications where high-level frameworks like PyTorch or TensorFlow introduce unnecessary overhead.
 
 ## Core Capabilities
 
 - **Native CUDA/cuDNN Optimization**: Direct manipulation of memory and descriptors for ultra-fast inference.
 - **Edge Deployment Ready**: Designed with a minimal footprint for systems like NVIDIA Jetson Nano/Xavier.
-- **Robust Training Pipeline**: Includes advanced features like He Initialization and weight decay for stable learning.
-- **Modular Architecture**: Logical separation between data processing, neural network logic, and hardware utilities.
+- **Robust Training Pipeline**: Includes state-of-the-art CNN optimizations like Batch Normalization, Dropout, and Momentum SGD.
+- **Modular Architecture**: Logical separation between data processing, neural network computation, and hardware utilities.
 
 ## Technical Specifications
 
 | Feature | Implementation | Benefit |
 | :--- | :--- | :--- |
-| **Architecture** | 3-Layer Deep CNN (2 Conv + 1 FC) | High feature extraction capacity with minimal FLOPs. |
+| **Architecture** | Deep CNN (Conv -> BN -> ReLU -> Pool) | High feature extraction capacity with normalized signals. |
+| **Normalization** | Batch Normalization (Spatial) | Mitigates internal covariate shift, speeding up convergence. |
+| **Regularization** | Dropout (50%) & L2 Weight Decay | Prevents co-adaptation and overfitting on training data. |
 | **Initialization** | He (Kaiming) Normal | Prevents vanishing/exploding gradients in ReLU layers. |
-| **Regularization** | L2 Weight Decay (Lambda = 0.0005) | Reduces overfitting by penalizing large weights. |
-| **Optimization** | SGD with Learning Rate Decay | Smooth convergence and high final precision. |
+| **Optimization** | Custom Momentum SGD Kernel | Accelerated gradient descent directly on the GPU. |
+| **Learning Rate** | Scheduled LR Decay | Smooth convergence and high final precision. |
 | **Hardware** | Synchronous CUDA Streams | Guaranteed deterministic behavior for safety-critical tasks. |
 
 ## Project Structure
@@ -61,6 +63,8 @@ cd classification
 ## Development Roadmap
 
 - [x] Deep CNN Core with He Initialization.
+- [x] Batch Normalization & Dropout Regularization.
+- [x] Custom Momentum-Accelerated SGD Kernel.
 - [x] L2 Regularization & Scheduled LR Decay.
 - [x] High-precision GPU Benchmark Timers.
 - [ ] Accelerated Data Augmentation (CUDA Kernels).
