@@ -14,6 +14,3 @@ flower_data/
 .DS_Store
 Thumbs.db
 
-# VS Code / IDE settings
-.vscode/
-.idea/
