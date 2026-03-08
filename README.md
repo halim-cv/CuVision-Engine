@@ -71,5 +71,14 @@ cd classification
 - [ ] Object Detection (Anchor-based kernels).
 - [ ] TensorRT Integration for production deployment.
 
+## Reference Papers
+
+The optimizations implemented in this engine are based on foundational deep learning research:
+
+1. **Batch Normalization**: [*Ioffe and Szegedy, 2015*] "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift" ([arXiv:1502.03167](https://arxiv.org/abs/1502.03167))
+2. **Dropout Regularization**: [*Srivastava et al., 2014*] "Dropout: A Simple Way to Prevent Neural Networks from Overfitting" ([JMLR](https://jmlr.org/papers/v15/srivastava14a.html))
+3. **He (Kaiming) Initialization**: [*He et al., 2015*] "Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification" ([arXiv:1502.01852](https://arxiv.org/abs/1502.01852))
+4. **Momentum SGD**: [*Sutskever et al., 2013*] "On the importance of initialization and momentum in deep learning" ([ICML](http://proceedings.mlr.press/v28/sutskever13.html))
+
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
